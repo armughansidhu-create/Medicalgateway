@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ChevronLeft, ChevronRight, Clock, Flag, X, CheckCircle, XCircle, SkipForward, BookOpen } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -16,7 +16,7 @@ interface QuestionState {
   timeSpent: number
 }
 
-export default function ExamPage() {
+function ExamPageInner() {
   const router       = useRouter()
   const params       = useSearchParams()
   const supabase     = createClient()
@@ -377,5 +377,12 @@ export default function ExamPage() {
         </div>
       )}
     </div>
+  )
+}
+export default function ExamPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center"><div className="h-10 w-10 animate-spin rounded-full border-4 border-brand-100 border-t-brand-700" /></div>}>
+      <ExamPageInner />
+    </Suspense>
   )
 }
